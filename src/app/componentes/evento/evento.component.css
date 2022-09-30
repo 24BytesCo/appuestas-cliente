@@ -1,0 +1,7 @@
+.card-eventos{
+  width: 90%;
+  display: flex;
+  padding-left: 100px !important;
+  justify-content: center;
+  padding-right: 100px !important;
+}
