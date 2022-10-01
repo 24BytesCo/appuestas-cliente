@@ -24,6 +24,9 @@ import { PartidoProgramadoComponent } from './componentes/partido-programado/par
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { equiposReducer } from './state/reducers/equipos.reducers';
+import { ROOT_REDUCERS } from './state/app.state';
+import { ItemProgramadosComponent } from './componentes/item-programados/item-programados.component';
 
 @NgModule({
   declarations: [
@@ -44,13 +47,16 @@ import { environment } from '../environments/environment';
     EventosDiaComponent,
     CabeceraDosComponent,
     PartidoProgramadoComponent,
+    ItemProgramadosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    StoreModule.forRoot({}, {}),
+    StoreModule.forRoot(
+      ROOT_REDUCERS
+    ),
     StoreDevtoolsModule.instrument({
       name: 'TEST',
     }),

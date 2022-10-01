@@ -65,22 +65,7 @@ export class CabeceraComponent implements OnInit {
     nombrePais: '',
   };
 
-  TodosEncuentros: EncuentosRes[] = [
-    {
-      equipoLocalBandera: '',
-      equipoLocalCodigo: '',
-      equipoLocalNombre: '',
-      equipoVisitanteBandera: '',
-      equipoVisitanteCodigo: '',
-      equipoVisitanteNombre: '',
-      estadoEncuentro: '',
-      fechaHoraFinal: '',
-      fechaHoraInicial: '',
-      marcadorLocal: '',
-      marcadorVisitante: '',
-      minutosEncuentro: '',
-    },
-  ];
+  TodosEncuentros: EncuentosRes[] = [];
 
   constructor(private _todosEventosService: TodosEventosService) {}
 

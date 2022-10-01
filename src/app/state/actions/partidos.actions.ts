@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { PaisRes } from '../../modelos/Result';
+import { EncuentosRes } from '../../modelos/Result';
 
-export const cargandoEquipos = createAction('[Equipos Lista] Cargando Equipos');
-export const equiposCargados = createAction(
-  '[Equipos Lista] Equipos Cargados Correctamente',
-  props<{ partidos: PaisRes[] }>()
+export const cargandoPartidos = createAction('[Partidos Lista] Cargando Partidos');
+export const partidosCargados = createAction(
+  '[Partidos Lista] Partidos Cargados Correctamente',
+  props<{ partidosLista: EncuentosRes[] }>()
 );

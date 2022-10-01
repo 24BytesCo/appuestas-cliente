@@ -1,6 +1,4 @@
 export interface Result<T> {
-  pageNumber: string;
-  pageSize: string;
   succeeded: string;
   message: string;
   errors: string;
@@ -21,16 +19,21 @@ export interface PaisRes {
   nombrePais: string;
 }
 export interface EncuentosRes {
+  idPartido: string;
   fechaHoraInicial: string;
   fechaHoraFinal: string;
+
   equipoLocalNombre: string;
-  equipoLocalBandera: string;
   equipoLocalCodigo: string;
+  equipoLocalBandera: string;
+
   equipoVisitanteNombre: string;
-  equipoVisitanteBandera: string;
   equipoVisitanteCodigo: string;
+  equipoVisitanteBandera: string;
+
   marcadorLocal: string;
   marcadorVisitante: string;
+
   estadoEncuentro: string;
   minutosEncuentro: string;
 }
@@ -50,4 +53,15 @@ export interface Encuentro {
   duracionMinutos: number;
   fechaHoraInicio: string;
   fechaHoraFin: string;
+}
+export interface EncuentroParams {
+  minuto: string;
+  tipoEventoId: string;
+  equipoEventoId: string;
+  partidoId: string;
+}
+export interface TipoEventoRes {
+  id: string;
+  descripcion: string;
+  codigo: string;
 }

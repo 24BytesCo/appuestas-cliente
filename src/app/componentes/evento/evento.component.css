@@ -5,3 +5,8 @@
   justify-content: center;
   padding-right: 100px !important;
 }
+
+.bg-rojo{
+  background-image: linear-gradient(310deg, #7928ca1c 0%, #ff008034 100%);
+
+}

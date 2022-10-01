@@ -7,7 +7,17 @@ import * as moment from 'moment';
 import { TodosEventosService } from './servicios/todos-eventos.service';
 import Swal from 'sweetalert2';
 import { Store } from '@ngrx/store';
-import { cargandoEquipos } from 'src/app/state/actions/partidos.actions';
+import {
+  cargandoEquipos,
+  equiposCargados,
+} from 'src/app/state/actions/equipos.actions';
+import { Observable } from 'rxjs';
+import { selectCargandoEquipos } from 'src/app/state/selectors/equpos.selectors';
+import { selectCargandoPartidos } from 'src/app/state/selectors/partidos.selectors';
+import {
+  cargandoPartidos,
+  partidosCargados,
+} from 'src/app/state/actions/partidos.actions';
 
 @Component({
   selector: 'app-todos-eventos',
@@ -66,22 +76,10 @@ export class TodosEventosComponent implements OnInit {
     nombrePais: '',
   };
 
-  TodosEncuentros: EncuentosRes[] = [
-    {
-      equipoLocalBandera: '',
-      equipoLocalCodigo: '',
-      equipoLocalNombre: '',
-      equipoVisitanteBandera: '',
-      equipoVisitanteCodigo: '',
-      equipoVisitanteNombre: '',
-      estadoEncuentro: '',
-      fechaHoraFinal: '',
-      fechaHoraInicial: '',
-      marcadorLocal: '',
-      marcadorVisitante: '',
-      minutosEncuentro: '',
-    },
-  ];
+  TodosEncuentros: EncuentosRes[] = [];
+
+  cargandoListaEquipos$: Observable<boolean> = new Observable();
+  cargandoListaPartidos$: Observable<boolean> = new Observable();
 
   constructor(
     private _todosEventosService: TodosEventosService,
@@ -89,10 +87,14 @@ export class TodosEventosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.cargandoListaEquipos$ = this._store.select(selectCargandoEquipos);
+    this.cargandoListaPartidos$ = this._store.select(selectCargandoPartidos);
+
     this._store.dispatch(cargandoEquipos());
 
     this._todosEventosService.getAllPaises().subscribe((res) => {
-      console.log('res', res);
+      this._store.dispatch(equiposCargados({ equiposLista: res.data }));
+
       this.Paises = res.data;
       this.PaisesCambios = res.data;
     });
@@ -100,11 +102,14 @@ export class TodosEventosComponent implements OnInit {
   }
 
   consultarTodosPartidos() {
+    this._store.dispatch(cargandoPartidos());
+
     this._todosEventosService
       .getAllEncuentros(true, false, false, false, false)
       .subscribe((res) => {
         this.TodosEncuentros = res.data;
-        console.log('TodosEncuentros ->', this.TodosEncuentros);
+
+        this._store.dispatch(partidosCargados({ partidosLista: res.data }));
       });
   }
 
