@@ -21,6 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CabeceraDosComponent } from './componentes/cabecera-dos/cabecera-dos.component';
 import { PartidoProgramadoComponent } from './componentes/partido-programado/partido-programado.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,16 @@ import { PartidoProgramadoComponent } from './componentes/partido-programado/par
     CabeceraDosComponent,
     PartidoProgramadoComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({
+      name: 'TEST',
+    }),
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -5,6 +5,9 @@ import { DuracionEvento } from '../../modelos/Result';
 import { Event } from '@angular/router';
 import * as moment from 'moment';
 import { TodosEventosService } from './servicios/todos-eventos.service';
+import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { cargandoEquipos } from 'src/app/state/actions/partidos.actions';
 
 @Component({
   selector: 'app-todos-eventos',
@@ -80,15 +83,23 @@ export class TodosEventosComponent implements OnInit {
     },
   ];
 
-  constructor(private _todosEventosService: TodosEventosService) {}
+  constructor(
+    private _todosEventosService: TodosEventosService,
+    private _store: Store<any>
+  ) {}
 
   ngOnInit(): void {
+    this._store.dispatch(cargandoEquipos());
+
     this._todosEventosService.getAllPaises().subscribe((res) => {
       console.log('res', res);
       this.Paises = res.data;
       this.PaisesCambios = res.data;
     });
+    this.consultarTodosPartidos();
+  }
 
+  consultarTodosPartidos() {
     this._todosEventosService
       .getAllEncuentros(true, false, false, false, false)
       .subscribe((res) => {
@@ -96,6 +107,7 @@ export class TodosEventosComponent implements OnInit {
         console.log('TodosEncuentros ->', this.TodosEncuentros);
       });
   }
+
   modalAbierto() {
     var resetForm = <HTMLFormElement>(
       document.getElementById('formularioNuevoEvento')
@@ -185,7 +197,24 @@ export class TodosEventosComponent implements OnInit {
       .nuevoEncuentro(this.NuevoEncuentro)
       .subscribe((res) => {
         if (res.succeeded) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Has creado un nuevo partido',
+          });
           document.getElementById('modal-nuevo-evento')?.click();
+          this.consultarTodosPartidos();
         }
         console.log('res____>', res);
       });
