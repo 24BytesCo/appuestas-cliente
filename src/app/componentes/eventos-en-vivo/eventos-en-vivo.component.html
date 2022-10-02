@@ -1,1 +1,31 @@
-<p>eventos-en-vivo works!</p>
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  id="sidenav-main" style="box-shadow: true !important;">
+  <app-barra-lateral></app-barra-lateral>
+
+</aside>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+
+  <app-cabecera-dos></app-cabecera-dos>
+
+  <div class="container-fluid py-4 mb-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="card p-3">
+          <h4 class="text-center mb-1 mt-4">Partidos En Vivo ({{ listaPartidosProgramados.length }})</h4>
+          <span style="    margin-right: 96px; align-self: self-end; font-size: 12px;">Los resultados mostrados son
+            Parciales y se actualizan en vivo*</span>
+          <div class="card-group" style="padding-bottom: 100px !important;">
+            <div class="col-12 m-2">
+              <app-item-en-vivo></app-item-en-vivo>
+
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <app-pie-pagina></app-pie-pagina>
+  </div>
+</div>

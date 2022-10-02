@@ -18,6 +18,12 @@ import {
   cargandoPartidos,
   partidosCargados,
 } from 'src/app/state/actions/partidos.actions';
+import { SocketServiceService } from 'src/app/socket-services/SocketService.service';
+import {
+  alertaEventos,
+  alertaPequeñaSuperiorDerecha,
+  alertaTiempo,
+} from 'src/app/servicios-genericos/alerta';
 
 @Component({
   selector: 'app-todos-eventos',
@@ -34,6 +40,8 @@ export class TodosEventosComponent implements OnInit {
       nombrePais: '',
     },
   ];
+
+  FechaHoraEnviar!: string;
 
   PaisesCambios: PaisRes[] = [
     {
@@ -79,18 +87,29 @@ export class TodosEventosComponent implements OnInit {
   TodosEncuentros: EncuentosRes[] = [];
 
   cargandoListaEquipos$: Observable<boolean> = new Observable();
-  cargandoListaPartidos$: Observable<boolean> = new Observable();
+  cargandoListaPartidos$: Observable<any> = new Observable();
 
+  Hora!: Date;
+  FechaActual!: string;
   constructor(
     private _todosEventosService: TodosEventosService,
-    private _store: Store<any>
-  ) {}
+    private _store: Store<any>,
+    private _socket: SocketServiceService
+  ) {
+    this.FechaActual = moment().locale('es').format('LL');
+  }
 
   ngOnInit(): void {
-    this.cargandoListaEquipos$ = this._store.select(selectCargandoEquipos);
-    this.cargandoListaPartidos$ = this._store.select(selectCargandoPartidos);
+    console.log('Ebtramos a Todos Eventos Compenent');
 
-    this._store.dispatch(cargandoEquipos());
+    this._socket.updateFix$().subscribe((res) => {
+      console.log('Todos Eventos Componen FIXURE', res.data);
+    });
+
+    this._socket.getPartidos$().subscribe((res) => {
+      this.TodosEncuentros = res.data.data;
+      this._store.dispatch(partidosCargados({ partidosLista: res.data.data }));
+    });
 
     this._todosEventosService.getAllPaises().subscribe((res) => {
       this._store.dispatch(equiposCargados({ equiposLista: res.data }));
@@ -98,26 +117,26 @@ export class TodosEventosComponent implements OnInit {
       this.Paises = res.data;
       this.PaisesCambios = res.data;
     });
-    this.consultarTodosPartidos();
   }
 
-  consultarTodosPartidos() {
-    this._store.dispatch(cargandoPartidos());
+  // consultarTodosPartidos() {
+  //   this._store.dispatch(cargandoPartidos());
 
-    this._todosEventosService
-      .getAllEncuentros(true, false, false, false, false)
-      .subscribe((res) => {
-        this.TodosEncuentros = res.data;
+  //   this._todosEventosService
+  //     .getAllEncuentros(true, false, false, false, false)
+  //     .subscribe((res) => {
+  //       this.TodosEncuentros = res.data;
 
-        this._store.dispatch(partidosCargados({ partidosLista: res.data }));
-      });
-  }
+  //       this._store.dispatch(partidosCargados({ partidosLista: res.data }));
+  //     });
+  // }
 
   modalAbierto() {
     var resetForm = <HTMLFormElement>(
       document.getElementById('formularioNuevoEvento')
     );
     resetForm.reset();
+
     this.PaisLocal.idPais = '';
     this.PaisVisitante.idPais = '';
     this.NuevoEncuentro.duracionMinutos = 0;
@@ -135,7 +154,7 @@ export class TodosEventosComponent implements OnInit {
   cambio() {
     console.log('Local', this.PaisLocal.idPais);
     this.PaisesCambios = this.Paises;
-    this.PaisVisitante.idPais = this.PaisLocal.idPais;
+    // this.PaisVisitante.idPais = this.PaisLocal.idPais;
 
     this.PaisesCambios = this.PaisesCambios.filter(
       (r) => r.idPais != this.PaisLocal.idPais
@@ -160,6 +179,7 @@ export class TodosEventosComponent implements OnInit {
   }
 
   cambioVisitante() {
+    // this.PaisVisitante.idPais = this.PaisLocal.idPais;
     var imgElementW = document.createElement('img');
 
     console.log('Visitante', this.PaisVisitante.idPais);
@@ -174,55 +194,115 @@ export class TodosEventosComponent implements OnInit {
     divbandera.style.marginBottom = '5px';
     divbandera.style.width = '50px';
     divbandera.setAttribute('src', this.Url);
-  }
-
-  abrirPopupAddEntuentro() {
-    return !this.PopupAddEntuentro;
+    // this.PaisVisitante.idPais = '0';
   }
 
   cambioFecha(e: any) {
-    this.NuevoEncuentro.fechaHoraInicio = moment(e.target.value).format();
-    console.log('Acmbio fecha => ', this.NuevoEncuentro.fechaHoraInicio);
+    var btn = document.getElementById('crear-evento');
+
+    //Se habilita el botón
+    btn?.removeAttribute('disabled');
+
+    var horaActual = moment().format('HH:mm');
+    var horaModal = e.target.value;
+    var fechaHora = moment().format('YYYY-MM-DD HH:mm:ss');
+    console.log('fechaHora', fechaHora);
+
+    var arrayT = fechaHora.split(' ');
+    fechaHora = arrayT[0] + ' ' + horaModal;
+
+    console.log('fechaHora', fechaHora);
+    console.log('horaModal', horaModal);
+
+    //Validando horas partido
+
+    this.NuevoEncuentro.fechaHoraInicio = moment(fechaHora).format();
+    this.NuevoEncuentro.fechaHoraInicio =
+      this.NuevoEncuentro.fechaHoraInicio.split('-05:0')[0];
+  }
+  validarCruceFechasPartido(datosPartido: Encuentro) {
+    this._todosEventosService
+      .validarCruceFechas(datosPartido)
+      .subscribe((res) => {
+        if (!res.data.procede) {
+          alertaPequeñaSuperiorDerecha(res.data.mensajeRespuesta, true);
+          var btn = document.getElementById('crear-evento');
+          btn?.setAttribute('disabled', 'true');
+        } else {
+          this._todosEventosService
+            .nuevoEncuentro(this.NuevoEncuentro)
+            .subscribe((res) => {
+              if (res.succeeded) {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 5000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                  },
+                });
+
+                Toast.fire({
+                  icon: 'success',
+                  title: 'Has creado un nuevo partido',
+                });
+                document.getElementById('modal-nuevo-evento')?.click();
+                // this.consultarTodosPartidos();
+              }
+            });
+        }
+      });
   }
   crearEvento() {
-    console.log(
-      'this.NuevoEncuentro.fechaHoraInicio',
-      this.NuevoEncuentro.fechaHoraInicio
-    );
+    if (this.PaisLocal.idPais == null) {
+      alertaPequeñaSuperiorDerecha('Debes seleccionar el equipo local', true);
+
+      return;
+    }
+
+    if (this.PaisVisitante.idPais == null || this.PaisVisitante.idPais == '') {
+      alertaPequeñaSuperiorDerecha(
+        'Debes seleccionar el equipo visitante',
+        true
+      );
+      return;
+    }
+
+    if (
+      this.NuevoEncuentro.fechaHoraInicio == null ||
+      this.NuevoEncuentro.fechaHoraInicio == ''
+    ) {
+      alertaPequeñaSuperiorDerecha(
+        'Debes seleccionar la fecha de inicio',
+        true
+      );
+      return;
+    }
+    if (this.NuevoEncuentro.duracionMinutos == null) {
+      alertaPequeñaSuperiorDerecha(
+        'Debes seleccionar la duración del patido',
+        true
+      );
+      return;
+    }
+
+    alertaTiempo();
 
     this.NuevoEncuentro.fechaHoraFin = this.calculandoFechaFinal(
       new Date(this.NuevoEncuentro.fechaHoraInicio),
       this.NuevoEncuentro.duracionMinutos
     );
 
+    this.NuevoEncuentro.fechaHoraFin =
+      this.NuevoEncuentro.fechaHoraFin.split('-05:0')[0];
+
     this.NuevoEncuentro.paisLocal = this.PaisLocal.idPais;
     this.NuevoEncuentro.paisVisitante = this.PaisVisitante.idPais;
-    console.log('evento nuevo', this.NuevoEncuentro);
-    this._todosEventosService
-      .nuevoEncuentro(this.NuevoEncuentro)
-      .subscribe((res) => {
-        if (res.succeeded) {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer);
-              toast.addEventListener('mouseleave', Swal.resumeTimer);
-            },
-          });
 
-          Toast.fire({
-            icon: 'success',
-            title: 'Has creado un nuevo partido',
-          });
-          document.getElementById('modal-nuevo-evento')?.click();
-          this.consultarTodosPartidos();
-        }
-        console.log('res____>', res);
-      });
+    this.validarCruceFechasPartido(this.NuevoEncuentro);
   }
 
   calculandoFechaFinal(FechaInicial: Date, minutosDuracionEvento: number) {

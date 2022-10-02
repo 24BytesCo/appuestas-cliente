@@ -1,0 +1,65 @@
+<div *ngFor="let partido of listaPartidosProgramados" class="m-4 card p-4 card-eventos">
+  <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
+
+
+  </div>
+
+  <div class="card-body pt-2">
+    <div class="row">
+
+      <div class="col-3 mt-2" style="font-size: 12px;">
+        <div class="col-12">Fecha Inicial
+          {{partido.fechaHoraInicial}} </div>
+        <div class="col-12">Fecha Final
+          {{partido.fechaHoraFinal}}</div>
+      </div>
+      <div class="col-1">
+        <div class="col-12" style="display: flex; justify-content: right;">
+
+          <img style="border-radius: 5px; padding: 2px;" width="35px" height="25px" [src]="partido.equipoLocalBandera"
+            alt="" srcset="">
+
+        </div>
+        <div class="col-12" style="display: flex; justify-content: right;">
+
+          <img style="border-radius: 5px; padding: 2px;" width="35px" height="25px"
+            [src]="partido.equipoVisitanteBandera" alt="" srcset="">
+
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="col-12">{{partido.equipoLocalNombre}}</div>
+        <div class="col-12">{{partido.equipoVisitanteNombre}}</div>
+      </div>
+      <div class="col-2">
+        <div class="col-12"><i class='fa fa-futbol-o'></i>
+          {{partido.marcadorParcialLocal}}</div>
+        <div class="col-12"><i class='fa fa-futbol-o'></i>
+          {{partido.marcadorParcialVisitante}}</div>
+
+      </div>
+      <div class="col-1">
+        <div class="col-12">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          {{partido.tarjetasParcialesAmarillasLocal}}
+        </div>
+        <div class="col-12">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          {{partido.tarjetasParcialesAmarillasVisitante}}
+        </div>
+
+      </div>
+
+      <div class="col-3" style="margin-top: 20px; font-size: 12px;">
+        {{partido.faltante}}
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+
+
+</div>

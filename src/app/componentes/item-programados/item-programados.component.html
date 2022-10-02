@@ -8,9 +8,11 @@
   <div class="card-body pt-2">
     <div class="row">
 
-      <div class="col-2" style="margin-top: 0px; font-size: 13px;">
-        <div class="col-12">Fecha Inicial</div>
-        {{partido.fechaHoraInicial}}
+      <div class="col-3 mt-2" style="font-size: 12px;">
+        <div class="col-12">Fecha Inicial
+          {{partido.fechaHoraInicial}} </div>
+        <div class="col-12">Fecha Final
+          {{partido.fechaHoraFinal}}</div>
       </div>
       <div class="col-1">
         <div class="col-12" style="display: flex; justify-content: right;">
@@ -30,21 +32,30 @@
         <div class="col-12">{{partido.equipoLocalNombre}}</div>
         <div class="col-12">{{partido.equipoVisitanteNombre}}</div>
       </div>
-      <div class="col-2">
-        <div class="col-12">{{partido.marcadorLocal}}</div>
-        <div class="col-12">{{partido.marcadorVisitante}}</div>
+      <div class="col-1">
+        <div class="col-12"><i class='fa fa-futbol-o'></i>MT {{partido.marcadorLocal}}</div>
+        <div class="col-12"><i class='fa fa-futbol-o'></i>MT {{partido.marcadorVisitante}}</div>
 
       </div>
-      <div class="col-2" style="margin-top: 15px;">
-
-        <span *ngIf="partido.estadoEncuentro == 'PROG'">Pendiente </span>
-        <span *ngIf="partido.estadoEncuentro == 'CAN'">Cancelado </span>
+      <div class="col-1">
+        <div class="col-12">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          TA {{partido.tarjetasAmarillasLocal}}
+        </div>
+        <div class="col-12">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          TA {{partido.tarjetasAmarillasVisitante}}
+        </div>
 
       </div>
-      <div class="col-1" style="margin-top: 15px;">47:05</div>
-      <div class="col-2" style="margin-top: 5px;">
-        <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn bg-gradient-dark mb-0"
-          (click)="agregarEvento(partido)"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Evento</a>
+      <div class="col-2" style="margin-top: 5px; font-size: 12px;">
+        {{partido.faltante}}
+
+      </div>
+      <div class="col-2 d-flex justify-content-end" style="margin-top: 5px;">
+        <a style="width: 100%; height: 80%;" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          class="btn bg-gradient-dark mb-0" (click)="agregarEvento(partido)"><i class="fas fa-plus"
+            aria-hidden="true"></i>&nbsp;&nbsp;Add Evento</a>
       </div>
 
 
@@ -52,74 +63,75 @@
 
   </div>
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 50%;" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo Evento al Partido</h5>
-          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div id="formularioNuevoEventoPartido" class="row">
-            <div class="form-group">
-              <label for="tipoEventoSelect">Seleccione el Tipo Evento</label>
-              <select name="locale" (change)="cambioTipoEvento()" [(ngModel)]="TipoEventoSeleccionado"
-                class="form-control">
-                <option *ngFor="let tipoEvento of AllTipoEvento" [value]="tipoEvento.id">{{ tipoEvento.descripcion }}
-                </option>
 
-              </select>
+
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 50%;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo Evento al Partido</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="formularioNuevoEventoPartido" class="row">
+          <div class="form-group">
+            <label for="tipoEventoSelect">Seleccione el Tipo Evento</label>
+            <select name="locale" (change)="cambioTipoEvento()" [(ngModel)]="TipoEventoSeleccionado"
+              class="form-control">
+              <option *ngFor="let tipoEvento of AllTipoEvento" [value]="tipoEvento.id">{{ tipoEvento.descripcion }}
+              </option>
+
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="equipoEvento">Seleccione el Equipo</label>
+
+            <select (change)="cambioTipoEvento()" name="local" [(ngModel)]="ModeloRango.equipoEventoId"
+              class="form-control" id="equipoEvento">
+              <option [value]="EquipoLocal.id">{{ EquipoLocal.nombre }}
+              </option>
+              <option [value]="EquipoVisitante.id">{{ EquipoVisitante.nombre }}
+              </option>
+
+            </select>
+            <div class="text-center" style="margin-top: 20px;">
+              <span>El partido tiene una duración de {{ DuracionPartido }} minutos, seleccione
+                el minuto del
+                evento.</span>
             </div>
-            <div class="form-group">
-              <label for="equipoEvento">Seleccione el Equipo</label>
-
-              <select (change)="cambioTipoEvento()" name="local" [(ngModel)]="ModeloRango.equipoEventoId"
-                class="form-control" id="equipoEvento">
-                <option [value]="EquipoLocal.id">{{ EquipoLocal.nombre }}
-                </option>
-                <option [value]="EquipoVisitante.id">{{ EquipoVisitante.nombre }}
-                </option>
-
-              </select>
-              <div class="text-center" style="margin-top: 20px;">
-                <span>El partido tiene una duración de {{ DuracionPartido }} minutos, seleccione
-                  el minuto del
-                  evento.</span>
-              </div>
-              <div class="text-center">
-                <input [disabled]="TipoEventoSeleccionado == ''" style="width: 80%;" *ngIf="DuracionPartido == 90"
-                  [(ngModel)]="ModeloRango.minuto" max="90" type="range">
-                <input [disabled]="TipoEventoSeleccionado == ''" style="width: 80%;" *ngIf="DuracionPartido == 5"
-                  [(ngModel)]="ModeloRango.minuto" max="5" type="range">
-
-              </div>
-              <label *ngIf="TipoEventoSeleccionado != '' && EquipoSeleccionadoFiltrado != ''
-              && TipoEventoSeleccionadoFiltrado == 'Gol'
-              ">El {{TipoEventoSeleccionadoFiltrado}} a favor de
-                {{EquipoSeleccionadoFiltrado}}
-                será en el Minuto
-                {{ModeloRango.minuto}}</label>
-
-              <label *ngIf="TipoEventoSeleccionado != '' && EquipoSeleccionadoFiltrado != ''
-                && TipoEventoSeleccionadoFiltrado != 'Gol'
-                ">La {{TipoEventoSeleccionadoFiltrado}} en contra de
-                {{EquipoSeleccionadoFiltrado}}
-                será en el Minuto
-                {{ModeloRango.minuto}}</label>
+            <div class="text-center">
+              <input [disabled]="TipoEventoSeleccionado == ''" style="width: 80%;" *ngIf="DuracionPartido == 90"
+                [(ngModel)]="ModeloRango.minuto" max="90" type="range">
+              <input [disabled]="TipoEventoSeleccionado == ''" style="width: 80%;" *ngIf="DuracionPartido == 5"
+                [(ngModel)]="ModeloRango.minuto" max="5" type="range">
 
             </div>
+            <label *ngIf="TipoEventoSeleccionado != '' && EquipoSeleccionadoFiltrado != ''
+          && TipoEventoSeleccionadoFiltrado == 'Gol'
+          ">El {{TipoEventoSeleccionadoFiltrado}} a favor de
+              {{EquipoSeleccionadoFiltrado}}
+              será en el Minuto
+              {{ModeloRango.minuto}}</label>
+
+            <label *ngIf="TipoEventoSeleccionado != '' && EquipoSeleccionadoFiltrado != ''
+            && TipoEventoSeleccionadoFiltrado != 'Gol'
+            ">La {{TipoEventoSeleccionadoFiltrado}} en contra de
+              {{EquipoSeleccionadoFiltrado}}
+              será en el Minuto
+              {{ModeloRango.minuto}}</label>
+
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" id="modal-nuevo-partido-evento" class="btn bg-gradient-secondary"
-            data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" (click)="crearEvento()" class="btn bg-gradient-primary">Crear Evento</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-nuevo-partido-evento" class="btn bg-gradient-secondary"
+          data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="crearEvento()" class="btn bg-gradient-primary">Crear Evento</button>
       </div>
     </div>
   </div>
-
 </div>

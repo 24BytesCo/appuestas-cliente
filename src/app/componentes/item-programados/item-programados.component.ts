@@ -2,10 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { EncuentosRes, EncuentroParams } from 'src/app/modelos/Result';
 import { AppState } from 'src/app/state/app.state';
-import { selectListaPartidos } from 'src/app/state/selectors/partidos.selectors';
+import {
+  selectCargandoPartidos,
+  selectListaPartidos,
+} from 'src/app/state/selectors/partidos.selectors';
 import { ItemProgramadosService } from './servicios/item-programados.service';
 import { TipoEventoRes } from '../../modelos/Result';
 import Swal from 'sweetalert2';
+import {
+  cargandoPartidos,
+  partidosCargados,
+} from 'src/app/state/actions/partidos.actions';
+import { TodosEventosService } from '../todos-eventos/servicios/todos-eventos.service';
+import { selectCargandoEquipos } from 'src/app/state/selectors/equpos.selectors';
+import { Observable } from 'rxjs';
+import { SocketServiceService } from 'src/app/socket-services/SocketService.service';
+import { alertaTiempo } from 'src/app/servicios-genericos/alerta';
+import { alertaEventos } from '../../servicios-genericos/alerta';
 
 @Component({
   selector: 'app-item-programados',
@@ -15,10 +28,8 @@ import Swal from 'sweetalert2';
 export class ItemProgramadosComponent implements OnInit {
   listaPartidosProgramados: EncuentosRes[] = [];
 
-  constructor(
-    private _store: Store<AppState>,
-    private _itemProgramadosService: ItemProgramadosService
-  ) {}
+  cargandoListaEquipos$: Observable<boolean> = new Observable();
+  cargandoListaPartidos$: Observable<any> = new Observable();
 
   ModeloRango: EncuentroParams = {
     minuto: '',
@@ -42,22 +53,37 @@ export class ItemProgramadosComponent implements OnInit {
   EquipoSeleccionadoFiltrado: string = '';
   DuracionPartido: number = 0;
 
+  constructor(
+    private _store: Store<AppState>,
+    private _itemProgramadosService: ItemProgramadosService,
+    private _todosEventosService: TodosEventosService,
+    private _socket: SocketServiceService
+  ) {}
+
   ngOnInit(): void {
+    this._store.select(selectListaPartidos).subscribe((r) => {
+      this.listaPartidosProgramados = r.filter(
+        (partido) => partido.estadoEncuentro == 'PROG'
+      );
+      if (this.listaPartidosProgramados.length == 0) {
+      }
+    });
     this._itemProgramadosService.getAllTipoEnvento().subscribe((res) => {
       this.AllTipoEvento = res.data;
     });
 
-    this._store.select(selectListaPartidos).subscribe((res) => {
-      this.listaPartidosProgramados = [];
+    this._socket.getPartidos$().subscribe((res) => {
+      console.log('buscando en item');
 
-      this.listaPartidosProgramados = res.filter(
-        (r) => r.estadoEncuentro == 'PROG'
+      this.listaPartidosProgramados = res.data.data.filter(
+        (r: { estadoEncuentro: string }) => r.estadoEncuentro == 'PROG'
       );
-
       console.log(
-        'this.listaPartidosProgramados',
+        'listaPartidosProgramados programados',
         this.listaPartidosProgramados
       );
+
+      this._store.dispatch(partidosCargados({ partidosLista: res.data.data }));
     });
   }
 
@@ -66,7 +92,6 @@ export class ItemProgramadosComponent implements OnInit {
     this.ModeloRango.minuto = '1';
     this.ModeloRango.partidoId = partido.idPartido;
     this.EquipoSeleccionadoFiltrado = '';
-    this.TipoEventoSeleccionado = '';
     this.ModeloRango.equipoEventoId = '';
 
     this.EquipoLocal.nombre = partido.equipoLocalNombre;
@@ -77,6 +102,7 @@ export class ItemProgramadosComponent implements OnInit {
 
     this.DuracionPartido = parseInt(partido.minutosEncuentro);
   }
+
   cambioTipoEvento() {
     this.EquipoSeleccionadoFiltrado =
       this.EquipoLocal.id == this.ModeloRango.equipoEventoId
@@ -91,6 +117,7 @@ export class ItemProgramadosComponent implements OnInit {
   }
 
   crearEvento() {
+    alertaEventos();
     this.ModeloRango.tipoEventoId = this.TipoEventoSeleccionado;
 
     this.ModeloRango.minuto = this.ModeloRango.minuto.toString();
@@ -106,11 +133,13 @@ export class ItemProgramadosComponent implements OnInit {
           this.TipoEventoSeleccionado = '';
           this.ModeloRango.equipoEventoId = '';
 
+          document.getElementById('modal-nuevo-partido-evento')?.click();
+
           const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 5000,
+            timer: 3000,
             timerProgressBar: true,
             didOpen: (toast) => {
               toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -127,7 +156,7 @@ export class ItemProgramadosComponent implements OnInit {
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 5000,
+            timer: 3000,
             timerProgressBar: true,
             didOpen: (toast) => {
               toast.addEventListener('mouseenter', Swal.stopTimer);

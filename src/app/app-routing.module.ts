@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TodosEventosComponent } from './componentes/todos-eventos/todos-eventos.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { NuevoEventoComponent } from './componentes/nuevo-evento/nuevo-evento.component';
+import { EventosEnVivoComponent } from './componentes/eventos-en-vivo/eventos-en-vivo.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'nuevo-evento',
     component: NuevoEventoComponent,
+  },
+  {
+    path: 'en-vivo',
+    component: EventosEnVivoComponent,
   },
   {
     path: 'login',

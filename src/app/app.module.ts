@@ -27,7 +27,11 @@ import { environment } from '../environments/environment';
 import { equiposReducer } from './state/reducers/equipos.reducers';
 import { ROOT_REDUCERS } from './state/app.state';
 import { ItemProgramadosComponent } from './componentes/item-programados/item-programados.component';
-
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { ItemEnVivoComponent } from './componentes/item-en-vivo/item-en-vivo.component';
+import { LoaderComponent } from './componentes/loader/loader.component';
+//Configuracion del servidor
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,19 +51,20 @@ import { ItemProgramadosComponent } from './componentes/item-programados/item-pr
     EventosDiaComponent,
     CabeceraDosComponent,
     PartidoProgramadoComponent,
-    ItemProgramadosComponent
+    ItemProgramadosComponent,
+    ItemEnVivoComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    StoreModule.forRoot(
-      ROOT_REDUCERS
-    ),
+    StoreModule.forRoot(ROOT_REDUCERS),
     StoreDevtoolsModule.instrument({
       name: 'TEST',
     }),
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   bootstrap: [AppComponent],

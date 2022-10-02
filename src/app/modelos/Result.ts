@@ -34,14 +34,30 @@ export interface EncuentosRes {
   marcadorLocal: string;
   marcadorVisitante: string;
 
+  marcadorParcialLocal: string;
+  marcadorParcialVisitante: string;
+
+  tarjetasAmarillasLocal: string;
+  tarjetasAmarillasVisitante: string;
+
+  tarjetasParcialesAmarillasLocal: string;
+  tarjetasParcialesAmarillasVisitante: string;
+
   estadoEncuentro: string;
   minutosEncuentro: string;
+  faltante: string;
 }
 
 export interface UlrEnv {
   urlApi: string;
   production: boolean;
 }
+
+export interface validarCruceFechasRes {
+  procede: boolean;
+  mensajeRespuesta: string;
+}
+
 export interface DuracionEvento {
   descripcion: string;
   valor: number;
