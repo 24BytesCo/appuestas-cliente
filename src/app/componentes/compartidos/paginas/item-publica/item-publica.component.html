@@ -1,0 +1,76 @@
+<div *ngFor="let partido of PartidosProgramados" class="m-4 card p-4 card-eventos">
+  <!-- <div class="m-4 card p-4 card-eventos"> -->
+
+  <div class="card-body pt-2" style="width: 100%;">
+    <div class="row" style="width: 100%;">
+      <div class="col-12 mt-2" style="font-size: 12px; width: 100%;">
+        <div class="row">
+          <div class="col-2">
+            <div class="col-12">Fecha Inicial
+              {{partido.fechaHoraInicial}}
+            </div>
+            <div class="col-12">Fecha Final
+              {{partido.fechaHoraFinal}}
+            </div>
+          </div>
+
+          <div class="col-1">
+            <div class="col-12" style="display: flex; justify-content: right;">
+
+              <img style="border-radius: 5px; padding: 2px;" width="35px" height="25px"
+                [src]="partido.equipoLocalBandera" alt="" srcset="">
+
+            </div>
+            <div class="col-12" style="display: flex; justify-content: right;">
+
+              <img style="border-radius: 5px; padding: 2px;" width="35px" height="25px"
+                [src]="partido.equipoVisitanteBandera" alt="" srcset="">
+
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="col-12">{{partido.equipoLocalNombre}}</div>
+            <div class="col-12">{{partido.equipoVisitanteNombre}}</div>
+
+          </div>
+          <div class="col-2">
+            <!-- <div class="col-12"><i class='fa fa-futbol-o'></i>MT {{partido.marcadorLocal}}</div>
+        <div class="col-12"><i class='fa fa-futbol-o'></i>MT {{partido.marcadorVisitante}}</div> -->
+
+            <div class="col-12"><i class='fa fa-futbol-o'></i>MT Equipo Loc</div>
+            <div class="col-12"><i class='fa fa-futbol-o'></i>MT Equipo Vi</div>
+
+          </div>
+          <div class="col-1">
+            <div class="col-12">
+              <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+              <!-- TA {{partido.tarjetasAmarillasLocal}} -->
+            </div>
+            <div class="col-12">
+              <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+              <!-- TA {{partido.tarjetasAmarillasVisitante}} -->
+            </div>
+
+          </div>
+          <div class="col-2" style="margin-top: 5px; font-size: 12px;">
+            <!-- {{partido.faltante}} -->
+
+          </div>
+          <div class="col-2 d-flex justify-content-end" style="margin-top: 5px;">
+            <!-- <a style="width: 100%; height: 80%;" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          class="btn bg-gradient-dark mb-0" (click)="agregarEvento(partido)"><i class="fas fa-plus"
+            aria-hidden="true"></i>&nbsp;&nbsp;Add Evento</a> -->
+
+            <a style="width: 100%; height: 100%;" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              class="btn bg-gradient-dark mb-0"><i class="fas fa-plus"
+                aria-hidden="true"></i>&nbsp;&nbsp;Suscribirme</a>
+
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>

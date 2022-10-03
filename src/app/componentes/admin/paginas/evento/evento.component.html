@@ -1,0 +1,77 @@
+<div *ngFor="let partido of listaPartidosProgramados" class="m-4 card p-2 card-eventos">
+  <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
+
+
+  </div>
+
+  <div class="card-body pt-2 pr-0">
+    <div class="row pr-0">
+
+      <div class="col-2" style="margin-top: 0px;">
+        <div class="col-12 mt-2">
+          {{partido.fechaHoraInicial}}
+        </div>
+        <div class="col-12 mt-2">
+          {{partido.fechaHoraFinal}}
+        </div>
+
+      </div>
+      <div class="col-2">
+        <div class="col-12 mt-2" style="display: flex; justify-content: right;">
+
+          <img style="border-radius: 5px; padding: 2px;" width="35px" height="20px" [src]="partido.equipoLocalBandera"
+            alt="" srcset="">
+
+        </div>
+        <div class="col-12" style="display: flex; justify-content: right;">
+
+          <img style="border-radius: 5px; padding: 2px;" width="35px" height="20px"
+            [src]="partido.equipoVisitanteBandera" alt="" srcset="">
+
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="col-12 mt-2">{{partido.equipoLocalNombre}}</div>
+        <div class="col-12">{{partido.equipoVisitanteNombre}}</div>
+      </div>
+      <div class="col-1">
+        <div class="col-12 mt-2">MF <i class='fa fa-futbol-o'></i> {{partido.marcadorLocal}}</div>
+        <div class="col-12">MF <i class='fa fa-futbol-o'></i> {{partido.marcadorVisitante}}</div>
+
+      </div>
+      <div class="col-1">
+        <div class="col-12 mt-2">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          TA {{partido.tarjetasAmarillasLocal}}
+        </div>
+        <div class="col-12">
+          <img width="20px" src="../../../assets/img/t-amarilla.png" alt="" srcset="">
+          TA {{partido.tarjetasAmarillasVisitante}}
+        </div>
+
+      </div>
+      <div class="col-1 mt-3">
+
+        <span *ngIf="partido.estadoEncuentro == 'PROG'">Pendiente </span>
+        <span *ngIf="partido.estadoEncuentro == 'TER'">Finalizado </span>
+        <span *ngIf="partido.estadoEncuentro == 'CAN'">Cancelado </span>
+        <span *ngIf="partido.estadoEncuentro == 'LIVE'">En Vivo </span>
+
+      </div>
+
+      <div style="font-size: 12px;" *ngIf="partido.estadoEncuentro == 'TER'" class="col-3 pr-0 mt-3">Total Minutos
+        Jugados:
+        {{
+        partido.minutosEncuentro }}</div>
+      <div style="font-size: 12px;" *ngIf="partido.estadoEncuentro == 'LIVE'" class="col-3 pr-0 mt-3">{{
+        partido.faltante }}
+      </div>
+      <div style="font-size: 12px;" *ngIf="partido.estadoEncuentro == 'PROG'" class="col-3 pr-0 mt-3"> {{
+        partido.faltante }}
+      </div>
+
+
+    </div>
+
+  </div>
+</div>

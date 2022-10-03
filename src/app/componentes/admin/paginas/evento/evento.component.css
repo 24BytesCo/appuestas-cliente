@@ -1,0 +1,11 @@
+.card-eventos{
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.bg-rojo{
+  background-image: linear-gradient(310deg, #7928ca1c 0%, #ff008034 100%);
+
+}
