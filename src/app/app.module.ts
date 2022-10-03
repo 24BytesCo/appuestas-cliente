@@ -15,7 +15,7 @@ import { EventoComponent } from './componentes/admin/paginas/evento/evento.compo
 import { EventosTermiandosComponent } from './componentes/admin/paginas/eventos-termiandos/eventos-termiandos.component';
 import { EventosEnVivoComponent } from './componentes/admin/paginas/eventos-en-vivo/eventos-en-vivo.component';
 import { TableroComponent } from './componentes/admin/paginas/tablero/tablero.component';
-import { LoginComponent } from './componentes/compartidos/paginas/login/login.component';
+import { LoginComponent } from './componentes/autenticacion/paginas/login/login.component';
 import { EventosDiaComponent } from './componentes/admin/paginas/eventos-dia/eventos-dia.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +38,8 @@ import { PartidosProgramadosComponent } from './componentes/usuarios/paginas/par
 import { SidebarUsuariosComponent } from './componentes/usuarios/paginas/sidebar-usuarios/sidebar-usuarios.component';
 import { AdminComponent } from './componentes/admin/admin/admin.component';
 import { CompartidosComponent } from './componentes/compartidos/compartidos/compartidos.component';
+import { PollaComponent } from './componentes/usuarios/paginas/polla/polla.component';
+import { AutenticacionComponent } from './componentes/autenticacion/autenticacion/autenticacion.component';
 //Configuracion del servidor
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
@@ -71,6 +73,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     SidebarUsuariosComponent,
     AdminComponent,
     CompartidosComponent,
+    PollaComponent,
+    AutenticacionComponent,
   ],
   imports: [
     BrowserModule,
