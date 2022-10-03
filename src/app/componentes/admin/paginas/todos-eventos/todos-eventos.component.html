@@ -1,0 +1,111 @@
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  id="sidenav-main" style="box-shadow: true !important;">
+  <app-barra-lateral></app-barra-lateral>
+
+</aside>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+
+  <app-cabecera></app-cabecera>
+
+  <div class="container-fluid py-4 mb-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="card p-3">
+          <h4 class="text-center mb-1 mt-4">Historico Partidos ({{ TodosEncuentros.length }})</h4>
+
+          <a [routerLink]="['/login']">Login</a>
+
+          <div class="card-group" style="padding-bottom: 100px !important;">
+            <div class="col-12 m-2">
+              <app-evento></app-evento>
+
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <app-pie-pagina></app-pie-pagina>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 50%;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Programar Partido</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formularioNuevoEvento" class="row">
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Seleccione el equipo local</label>
+              <img id="bandera-local" />
+
+              <select name="local" (change)="cambio()" [(ngModel)]="PaisLocal.idPais" class="form-control"
+                id="exampleFormControlSelect1">
+                <option selected>Seleccione un Equipo</option>
+
+                <option *ngFor=" let pais of Paises " [value]="pais.idPais">{{ pais.nombrePais }}</option>
+
+              </select>
+
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Seleccione el equipo visitante</label>
+              <img id="bandera-visitante" />
+              <select name="local" (change)="cambioVisitante()" [(ngModel)]="PaisVisitante.idPais" class="form-control"
+                id="exampleFormControlSelect2">
+                <option value="0" selected>Seleccione un Equipo</option>
+                <option *ngFor=" let pais of PaisesCambios " [value]="pais.idPais">{{ pais.nombrePais }}</option>
+
+              </select>
+
+
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="example-datetime-local-input" class="form-control-label">Programación de partido para hoy
+              {{FechaActual}}</label>
+
+            <br>
+            <input style="width: 100%;" type="time" name="horaarribo" (change)="cambioFecha($event)">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormConastrolSelect1">Duración Encuentro</label>
+
+            <select name="local" [(ngModel)]="NuevoEncuentro.duracionMinutos" class="form-control"
+              id="exampleFormConastrolSelect1">
+              <option value="0" selected>Seleccione la duración del Partido</option>
+
+              <option *ngFor=" let duracion of DuracionEvento " [value]="duracion.valor">{{ duracion.descripcion }}
+              </option>
+
+            </select>
+
+          </div>
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-nuevo-evento" class="btn bg-gradient-secondary"
+          data-bs-dismiss="modal">Cerrar</button>
+        <button id="crear-evento" type="button" (click)="crearEvento()" class="btn bg-gradient-primary">Crear
+          Partido</button>
+      </div>
+    </div>
+  </div>
+</div>

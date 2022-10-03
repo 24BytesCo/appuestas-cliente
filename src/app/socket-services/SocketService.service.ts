@@ -18,7 +18,6 @@ export class SocketServiceService {
 
         this.socket.on('push', (data: any) => {
           //TODO Nuestro evento!!
-          console.log('Data Partido Recibida -> ', data.data.data);
           observer.next(data);
         });
 
@@ -58,6 +57,8 @@ export class SocketServiceService {
 
         this.socket.on('disconnect', () => {
           //TODO Nativo!
+          console.log('Desconectado desde angular');
+
           observer.complete();
         });
 
